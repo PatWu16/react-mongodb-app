@@ -6,6 +6,7 @@ const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const ERROR_MSG = 'ERROR_MSG';
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const LOAD_DATA = 'LOAD_DATA';
+const AUTH_SUCCESS = 'AUTH_SUCCESS';
 const initState = {
   redirectTo: '',
   isAuth: '',
@@ -17,6 +18,8 @@ const initState = {
 // reducer
 export function user(state = initState, action) {
   switch(action.type) {
+    case AUTH_SUCCESS:
+      return { ...state, redirectTo: getRedirectPath(action.payload), msg: '', ...action.payload };
     case REGISTER_SUCCESS:
       return { ...state, isAuth: true, redirectTo: getRedirectPath(action.payload), msg: '', ...action.payload };
     case LOGIN_SUCCESS:
@@ -69,7 +72,29 @@ export function login({ user, pwd }) {
   };
 }
 
-function registerSuccess(data) {
+export function update(data) {
+  return dispatch => {
+    axios.post('/user/update', data)
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          dispatch(authSuccess(res.data.data));
+        } else {
+          dispatch(errorMsg(res.data.msg));
+        }
+      })
+  }
+}
+
+function authSuccess(obj) {
+  const {pwd, ...data} = obj;
+  return {
+    type: AUTH_SUCCESS,
+    payload: data,
+  };
+}
+
+function registerSuccess(obj) {
+  const {pwd, ...data} = obj;
   return {
     type: REGISTER_SUCCESS,
     payload: data,
@@ -80,7 +105,8 @@ function errorMsg(msg) {
   return { msg, type: ERROR_MSG };
 }
 
-function loginSuccess(data) {
+function loginSuccess(obj) {
+  const {pwd, ...data} = obj;
   return {
     type: LOGIN_SUCCESS,
     payload: data,

@@ -47,10 +47,12 @@ class Register extends React.Component{
             >用户</InputItem>
             <WhiteSpace />
             <InputItem
+              type="password"
               onChange={val => this.handleChange('pwd', val)}
             >密码</InputItem>
             <WhiteSpace />
             <InputItem
+              type="password"
               onChange={val => this.handleChange('repeatPwd', val)}
             >确认密码</InputItem>
             <WhiteSpace />
