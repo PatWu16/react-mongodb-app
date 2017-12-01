@@ -5,49 +5,45 @@ import { Redirect } from 'react-router-dom';
 
 import Logo from '../../component/logo/Logo';
 import { login } from '../../redux/user.redux';
+import imoocForm from '../../component/imoocForm/ImoocForm';
 
 @connect(
   state => state.user,
   { login }
 )
+@imoocForm
 class Login extends React.Component{
   constructor (props) {
     super(props);
-    this.state = {
-      user: '',
-      pwd: '',
-    }
+    this.state = {}
   }
 
   register = () => {
     this.props.history.push('/register');
   }
 
-  handleChange = (key, val) => {
-    this.setState({
-      [key]: val,
-    });
-  }
-
   handleLogin = () => {
-    this.props.login(this.state);
+    this.props.login(this.props.state);
   }
 
   render () {
+    const { pathname } = this.props.location;
+    const redirectTo = this.props.redirectTo;
+
     return (
       <div>
-        {this.props.redirectTo ? <Redirect to={this.props.redirectTo} /> : null}
+        {(redirectTo && redirectTo !== pathname) ? <Redirect to={redirectTo} /> : null}
         <Logo />
         <WingBlank>
           <List>
             {this.props.msg ? <p className="error-msg">{this.props.msg}</p> : null}
             <InputItem
-              onChange={val => this.handleChange('user', val)}
+              onChange={val => this.props.handleChange('user', val)}
             >用户</InputItem>
             <WhiteSpace />
             <InputItem
               type="password"
-              onChange={val => this.handleChange('pwd', val)}
+              onChange={val => this.props.handleChange('pwd', val)}
             >密码</InputItem>
           </List>
           <WhiteSpace />

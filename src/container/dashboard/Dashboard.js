@@ -64,7 +64,7 @@ export default class Dashboard extends React.Component {
     ];
 
     return (
-      <div>
+      <div className="dashboard">
         <header>
           <NavBar mode="dark">
             {

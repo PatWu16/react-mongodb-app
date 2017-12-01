@@ -1,0 +1,6 @@
+GET http://localhost:9093/user/list?type="boss"
+
+<> 2017-12-01T105137.200.json
+
+###
+
